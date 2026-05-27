@@ -26,7 +26,7 @@ const scenarioBaseFilenames = [
 const scenarioImageMap: Partial<Record<MonkeyTurnScenarioName, string>> = {};
 MTV_SCENARIO_NAMES.forEach((scenarioEnum, index) => {
   if (index < scenarioBaseFilenames.length) {
-    scenarioImageMap[scenarioEnum] = `/zz_image/scenario/${index + 1}_${scenarioBaseFilenames[index]}.png`;
+    scenarioImageMap[scenarioEnum] = `./zz_image/scenario/${index + 1}_${scenarioBaseFilenames[index]}.png`;
   }
 });
 
