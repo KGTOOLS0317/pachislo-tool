@@ -23,6 +23,12 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Update SW cache version
+        run: |
+          BUILD_VER=$(date -u +%Y%m%d%H%M%S)
+          sed -i "s/pachislot-tool-cache-[^']*/pachislot-tool-cache-${BUILD_VER}/" public/sw.js
+          echo "SW cache version: pachislot-tool-cache-${BUILD_VER}"
+
       - name: Build
         run: npm run build
 

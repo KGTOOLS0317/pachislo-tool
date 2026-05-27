@@ -284,7 +284,7 @@ const App: React.FC = () => {
           <p className="text-xs text-gray-600 mt-2 sm:mt-3">&copy; {new Date().getFullYear()} パチスロ判別ツール. All Rights Reserved.</p>
           <div className="text-xs text-gray-500 mt-1 flex flex-col items-center justify-center space-y-2">
             <div className="flex items-center space-x-2">
-              <span>Version: {APP_VERSION}</span>
+              <span>Version: {APP_VERSION} (build: {new Date(__BUILD_DATE__).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' })})</span>
               <button onClick={() => setShowVersionHistory(true)} className="text-sky-600 hover:text-sky-700 underline focus:outline-none">更新履歴</button>
               <button onClick={() => setShowTheoreticalValues(true)} className="text-sky-600 hover:text-sky-700 underline focus:outline-none">理論値</button>
             </div>
