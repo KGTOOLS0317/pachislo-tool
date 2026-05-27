@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>パチスロ判別ツール</title>
+    <link rel="manifest" href="./manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Google tag (gtag.js) - ここから -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=YOUR_GA_MEASUREMENT_ID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // 下記の 'YOUR_GA_MEASUREMENT_ID' を実際の測定IDに置き換えてください。
+      gtag('config', 'G-LJTDFC0RXE');
+    </script>
+    <!-- Google tag (gtag.js) - ここまで -->
+    <style>
+      body {
+        font-family: 'Noto Serif JP', serif;
+        color: #374151; /* Dark gray text - Tailwind gray-700 */
+        position: relative; 
+        z-index: 1; 
+      }
+
+      body::before { /* Common styles for page background pseudo-element */
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        /* background-image is now set by specific body classes */
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        opacity: 0.15; 
+        z-index: -1;
+      }
+      
+      /* Game-specific page backgrounds */
+      body.page-bg-mtv::before { background-image: url('./assets/background-monkey-turn-v-DNYrvyXH.jpg'); }
+      body.page-bg-khh::before { background-image: url('./assets/background-king-hana-hana-s-Wne66WYZ.jpg'); }
+      body.page-bg-hhh::before { background-image: url('./assets/background-hana-hana-houou-BHWBFOop.jpg'); }
+      body.page-bg-mjv::before { background-image: url('./assets/background-my-juggler-BVaAbquk.jpg'); }
+      body.page-bg-imj::before { background-image: url('./assets/background-im-juggler-CryPDJjx.jpg'); }
+      body.page-bg-ggj::before { background-image: url('./assets/background-gogo-juggler-Bi7LBwc1.jpg'); }
+      body.page-bg-fkj::before { background-image: url('./assets/background-funky-juggler-QdgsGcUq.jpg'); }
+      body.page-bg-dhh::before { background-image: url('./assets/background-dragon-hana-hana-CoKDQqUB.jpg'); }
+      body.page-bg-shh::before { background-image: url('./assets/background-star-hana-hana-CcLYkOVF.jpg'); }
+      body.page-bg-ngm::before { background-image: url('./assets/background-new-getter-mouse-hcN0Y6wu.jpg'); }
+      body.page-bg-hpj::before { background-image: url('./assets/background-happy-juggler-DxV2G9Uj.jpg'); }
+
+
+      .custom-scroll::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      .custom-scroll::-webkit-scrollbar-track {
+        background: #e0e7ff; 
+      }
+      .custom-scroll::-webkit-scrollbar-thumb {
+        background: #3b82f6; 
+        border-radius: 4px;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb:hover {
+        background: #2563eb; 
+      }
+      select {
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232563EB' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.5rem center;
+        background-size: 1.5em 1.5em;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        padding-right: 2.5rem;
+      }
+
+    </style>
+  <script type="module" crossorigin src="./assets/index-BzR2Bm__.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-tn0RQdqM.css">
+</head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
