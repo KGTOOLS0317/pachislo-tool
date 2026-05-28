@@ -79,7 +79,7 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
         return (
           <div
             key={name}
-            className={`flex items-center justify-center h-full ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
+            className={`flex items-center justify-center h-full overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
             style={{ width: segmentWidth }}
             title={`${name}: ${percentage}%`}
             role="progressbar"
