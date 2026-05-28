@@ -184,12 +184,6 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
           logging: false,
           windowWidth: document.documentElement.clientWidth,
           windowHeight: document.documentElement.clientHeight,
-          onclone: (_doc: Document, el: HTMLElement) => {
-            el.style.overflow = 'visible';
-            el.querySelectorAll<HTMLElement>('*').forEach(child => {
-              child.style.overflow = 'visible';
-            });
-          },
         });
         const imageMimeType = 'image/png';
         if (navigator.share && typeof navigator.canShare === 'function') {

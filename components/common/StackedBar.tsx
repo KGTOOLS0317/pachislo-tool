@@ -50,7 +50,7 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
   const maxProbability = Math.max(0, ...sortedProbabilities.map(([, p]) => p as number));
 
   return (
-    <div className={`w-full ${heightClass} flex rounded shadow mb-1 relative`}>
+    <div className={`w-full ${heightClass} flex rounded shadow mb-1 relative overflow-hidden`}>
       {sortedProbabilities.map(([name, probability]) => {
         // Fix: Cast `probability` to number for arithmetic operation.
         const percentage = ((probability as number) * 100).toFixed(1);
