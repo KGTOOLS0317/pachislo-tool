@@ -180,14 +180,14 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
         const options = {
           backgroundColor: '#f0f9ff',
           pixelRatio: window.devicePixelRatio || 2,
-          cacheBust: true,
+          skipFonts: true,   // skip external font fetching (fonts already loaded in DOM)
+          cacheBust: false,
         };
 
-        // iOS Safari requires multiple attempts with html-to-image
-        let dataUrl = '';
-        for (let i = 0; i < 3; i++) {
+        // iOS Safari sometimes needs a second attempt
+        let dataUrl = await toPng(resultsElement, options);
+        if (dataUrl.length < 10000) {
           dataUrl = await toPng(resultsElement, options);
-          if (dataUrl.length > 10000) break;
         }
 
         if (navigator.share && typeof navigator.canShare === 'function') {
