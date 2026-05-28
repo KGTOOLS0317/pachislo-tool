@@ -49,13 +49,17 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
   // Fix: Cast `p` to number as Object.entries may return `unknown` values.
   const maxProbability = Math.max(0, ...sortedProbabilities.map(([, p]) => p as number));
 
+  const BAR_HEIGHT = '1.5rem';
+
   return (
-    <div className={`w-full ${heightClass} flex rounded shadow mb-1 relative overflow-hidden`} style={{ overflow: 'hidden' }} data-bar-container="true">
+    <div
+      className={`w-full ${heightClass} flex rounded shadow mb-1 relative overflow-hidden`}
+      style={{ height: BAR_HEIGHT, overflow: 'hidden' }}
+      data-bar-container="true"
+    >
       {sortedProbabilities.map(([name, probability]) => {
-        // Fix: Cast `probability` to number for arithmetic operation.
         const percentage = ((probability as number) * 100).toFixed(1);
         const pct = (probability as number) * 100;
-        // Fix: Cast `probability` to number for arithmetic operation.
         const segmentWidth = `${Math.max(0.1, pct)}%`;
         const bgColor = SHARED_SETTING_COLORS[name] || SHARED_SETTING_COLORS["default"];
         const textColor = SHARED_TEXT_COLORS[name] || SHARED_TEXT_COLORS["default"];
@@ -64,24 +68,23 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
         let highlightClasses = "";
         if (isHighest) {
             const highlightColors = SHARED_SETTING_HIGHLIGHT_COLORS[name] || SHARED_SETTING_HIGHLIGHT_COLORS["default"];
-            let effectClasses = "";
-            let ringThicknessClass = "";
-
-            if (isOverallResult) {
-                effectClasses = "transform scale-[1.015] shadow-xl";
-                ringThicknessClass = "ring-2";
-            } else {
-                effectClasses = "shadow-md";
-                ringThicknessClass = "ring-1";
-            }
+            const effectClasses = isOverallResult ? "transform scale-[1.015] shadow-xl" : "shadow-md";
+            const ringThicknessClass = isOverallResult ? "ring-2" : "ring-1";
             highlightClasses = `${highlightColors.border} ${highlightColors.ring} ${ringThicknessClass} ring-offset-0 ${effectClasses} z-10`;
         }
 
         return (
           <div
             key={name}
-            className={`h-full overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
-            style={{ width: segmentWidth, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            className={`overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
+            style={{
+              width: segmentWidth,
+              height: BAR_HEIGHT,
+              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
             title={`${name}: ${percentage}%`}
             role="progressbar"
             aria-valuenow={parseFloat(percentage)}
@@ -90,7 +93,10 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
             aria-label={`${name} probability: ${percentage}%`}
           >
             {pct >= 6 && (
-              <span className={`text-xs sm:text-sm font-medium ${textColor} whitespace-nowrap px-1`} style={{ lineHeight: 1 }}>
+              <span
+                className={`text-xs font-medium ${textColor} whitespace-nowrap px-1`}
+                style={{ lineHeight: 1, display: 'block' }}
+              >
                 {percentage}%
               </span>
             )}
