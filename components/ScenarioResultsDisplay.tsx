@@ -1,5 +1,6 @@
 // components/ScenarioResultsDisplay.tsx
 import React, { useState } from 'react';
+import { toPng } from 'html-to-image';
 import type { 
   GenericProbabilities, 
   GenericResultsDisplayProps, 
@@ -42,7 +43,6 @@ import {
 import { SettingResultsDisplay } from './results/SettingResultsDisplay';
 import { MonkeyTurnVScenarioResultsDisplay } from './results/MonkeyTurnVScenarioResultsDisplay';
 
-declare const html2canvas: any;
 
 interface ScenarioResultsDisplayPropsExtended extends GenericResultsDisplayProps {
   gameMode: GameMode;
@@ -169,48 +169,38 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
     const handleSaveImage = async () => {
       const resultsElement = ref && typeof ref !== 'function' ? ref.current : null;
       if (!resultsElement) return;
-      if (typeof html2canvas !== 'function') return;
 
       await document.fonts.ready;
-
-      // Read actual bar container heights from the live DOM before cloning
-      const barContainers = Array.from(resultsElement.querySelectorAll<HTMLElement>('[data-bar-container]'));
-      const barHeights = barContainers.map(c => Math.round(c.getBoundingClientRect().height));
 
       const originalCursor = resultsElement.style.cursor;
       resultsElement.style.cursor = 'wait';
 
       try {
-        const canvas = await html2canvas(resultsElement, {
-          useCORS: true,
-          backgroundColor: '#f0f9ff',
-          scale: window.devicePixelRatio || 2,
-          logging: false,
-          windowWidth: document.documentElement.clientWidth,
-          windowHeight: document.documentElement.clientHeight,
-          onclone: (_doc: Document, el: HTMLElement) => {
-            // Apply explicit pixel heights so height:100% resolves correctly in the clone
-            el.querySelectorAll<HTMLElement>('[data-bar-container]').forEach((container, i) => {
-              if (barHeights[i] > 0) {
-                container.style.height = `${barHeights[i]}px`;
-              }
-            });
-          },
-        });
         const imageMimeType = 'image/png';
+        const options = {
+          backgroundColor: '#f0f9ff',
+          pixelRatio: window.devicePixelRatio || 2,
+          cacheBust: true,
+        };
+
+        // iOS Safari requires multiple attempts with html-to-image
+        let dataUrl = '';
+        for (let i = 0; i < 3; i++) {
+          dataUrl = await toPng(resultsElement, options);
+          if (dataUrl.length > 10000) break;
+        }
+
         if (navigator.share && typeof navigator.canShare === 'function') {
-          const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, imageMimeType));
-          if (blob) {
-            const file = new File([blob], `results.png`, { type: imageMimeType });
-            if (navigator.canShare({ files: [file] })) {
-              try {
-                await navigator.share({ files: [file], title: '設定推測結果' });
-                return;
-              } catch (e) {}
-            }
+          const blob = await fetch(dataUrl).then(r => r.blob());
+          const file = new File([blob], 'results.png', { type: imageMimeType });
+          if (navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({ files: [file], title: '設定推測結果' });
+              return;
+            } catch (e) {}
           }
         }
-        setPreviewImageUrl(canvas.toDataURL(imageMimeType));
+        setPreviewImageUrl(dataUrl);
         setShowImagePreviewModal(true);
       } catch (error) {
       } finally {
