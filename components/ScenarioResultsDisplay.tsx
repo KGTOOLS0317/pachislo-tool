@@ -177,11 +177,20 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
 
       try {
         const imageMimeType = 'image/png';
+        const fullWidth = resultsElement.scrollWidth;
+        const fullHeight = resultsElement.scrollHeight;
         const options = {
           backgroundColor: '#f0f9ff',
           pixelRatio: window.devicePixelRatio || 2,
-          skipFonts: true,   // skip external font fetching (fonts already loaded in DOM)
+          skipFonts: true,
           cacheBust: false,
+          width: fullWidth,
+          height: fullHeight,
+          style: {
+            width: `${fullWidth}px`,
+            height: `${fullHeight}px`,
+            overflow: 'visible',
+          },
         };
 
         // iOS Safari sometimes needs a second attempt
