@@ -80,8 +80,8 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
         return (
           <div
             key={name}
-            className={`flex items-center justify-center h-full overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
-            style={{ width: segmentWidth, overflow: 'hidden' }}
+            className={`h-full overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
+            style={{ width: segmentWidth, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             title={`${name}: ${percentage}%`}
             role="progressbar"
             aria-valuenow={parseFloat(percentage)}
@@ -90,7 +90,7 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
             aria-label={`${name} probability: ${percentage}%`}
           >
             {pct >= 6 && (
-              <span className={`inline-flex items-center justify-center h-full text-xs sm:text-sm font-medium ${textColor} whitespace-nowrap px-1`}>
+              <span className={`text-xs sm:text-sm font-medium ${textColor} whitespace-nowrap px-1`} style={{ lineHeight: 1 }}>
                 {percentage}%
               </span>
             )}
