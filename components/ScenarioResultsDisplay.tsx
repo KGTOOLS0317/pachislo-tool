@@ -173,6 +173,10 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
 
       await document.fonts.ready;
 
+      // Read actual bar container heights from the live DOM before cloning
+      const barContainers = Array.from(resultsElement.querySelectorAll<HTMLElement>('[data-bar-container]'));
+      const barHeights = barContainers.map(c => Math.round(c.getBoundingClientRect().height));
+
       const originalCursor = resultsElement.style.cursor;
       resultsElement.style.cursor = 'wait';
 
@@ -184,6 +188,14 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
           logging: false,
           windowWidth: document.documentElement.clientWidth,
           windowHeight: document.documentElement.clientHeight,
+          onclone: (_doc: Document, el: HTMLElement) => {
+            // Apply explicit pixel heights so height:100% resolves correctly in the clone
+            el.querySelectorAll<HTMLElement>('[data-bar-container]').forEach((container, i) => {
+              if (barHeights[i] > 0) {
+                container.style.height = `${barHeights[i]}px`;
+              }
+            });
+          },
         });
         const imageMimeType = 'image/png';
         if (navigator.share && typeof navigator.canShare === 'function') {
