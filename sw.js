@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pachislot-tool-cache-20260528133511'; // Cache version incremented
+const CACHE_NAME = 'pachislot-tool-cache-20260528134057'; // Cache version incremented
 const URLS_TO_CACHE = [
   './',
   './index.html', 
