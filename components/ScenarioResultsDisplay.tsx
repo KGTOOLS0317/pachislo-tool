@@ -170,14 +170,27 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
       const resultsElement = ref && typeof ref !== 'function' ? ref.current : null;
       if (!resultsElement) return;
       if (typeof html2canvas !== 'function') return;
-      
+
+      await document.fonts.ready;
+
       const originalCursor = resultsElement.style.cursor;
       resultsElement.style.cursor = 'wait';
-      const originalOverflow = resultsElement.style.overflow;
-      resultsElement.style.overflow = 'visible'; 
 
       try {
-        const canvas = await html2canvas(resultsElement, { useCORS: true, backgroundColor: '#f0f9ff', scale: 3 });
+        const canvas = await html2canvas(resultsElement, {
+          useCORS: true,
+          backgroundColor: '#f0f9ff',
+          scale: window.devicePixelRatio || 2,
+          logging: false,
+          windowWidth: document.documentElement.clientWidth,
+          windowHeight: document.documentElement.clientHeight,
+          onclone: (_doc: Document, el: HTMLElement) => {
+            el.style.overflow = 'visible';
+            el.querySelectorAll<HTMLElement>('*').forEach(child => {
+              child.style.overflow = 'visible';
+            });
+          },
+        });
         const imageMimeType = 'image/png';
         if (navigator.share && typeof navigator.canShare === 'function') {
           const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, imageMimeType));
@@ -186,7 +199,7 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
             if (navigator.canShare({ files: [file] })) {
               try {
                 await navigator.share({ files: [file], title: '設定推測結果' });
-                return; 
+                return;
               } catch (e) {}
             }
           }
@@ -195,7 +208,7 @@ export const ScenarioResultsDisplay = React.forwardRef<HTMLDivElement, ScenarioR
         setShowImagePreviewModal(true);
       } catch (error) {
       } finally {
-        if (resultsElement) { resultsElement.style.cursor = originalCursor; resultsElement.style.overflow = originalOverflow; }
+        if (resultsElement) { resultsElement.style.cursor = originalCursor; }
       }
     };
 
