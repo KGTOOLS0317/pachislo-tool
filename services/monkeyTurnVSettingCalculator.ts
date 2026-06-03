@@ -55,8 +55,13 @@ function getLogLikelihoodForBinomial(k: number, n: number, p: number): number {
 }
 
 export const calculateMonkeyTurnVSettingProbabilities = (
-  inputs: MonkeyTurnVSettingInput
+  inputs: MonkeyTurnVSettingInput,
+  selectedSettings?: string[]
 ): MonkeyTurnVSettingFullResult => {
+  const activeSettings = (selectedSettings && selectedSettings.length > 0)
+    ? MONKEY_TURN_V_SETTINGS_NAMES.filter(s => selectedSettings.includes(s))
+    : MONKEY_TURN_V_SETTINGS_NAMES;
+
   const overallLikelihoods: MonkeyTurnVSettingSettingProbabilities = {};
   const breakdownLikelihoods: MonkeyTurnVSettingProbabilitiesBreakdown = {};
   const observedRates: ObservedRates = {};
@@ -65,15 +70,15 @@ export const calculateMonkeyTurnVSettingProbabilities = (
   const elementNames = ["5枚役 確率", "落ち/気配 確率"];
   elementNames.forEach(name => breakdownLikelihoods[name] = {});
 
-  MONKEY_TURN_V_SETTINGS_NAMES.forEach(setting => {
-    overallLikelihoods[setting] = 1.0; 
+  activeSettings.forEach(setting => {
+    overallLikelihoods[setting] = 1.0;
     elementNames.forEach(name => breakdownLikelihoods[name][setting] = 1.0);
   });
-  
+
   const defaultResult: MonkeyTurnVSettingFullResult = {
-    overallProbabilities: normalizeProbabilities(MONKEY_TURN_V_SETTINGS_NAMES.reduce((acc, s) => { acc[s] = 1.0; return acc; }, {} as MonkeyTurnVSettingSettingProbabilities)),
+    overallProbabilities: normalizeProbabilities(activeSettings.reduce((acc, s) => { acc[s] = 1.0; return acc; }, {} as MonkeyTurnVSettingSettingProbabilities)),
     breakdownProbabilities: elementNames.reduce((acc, name) => {
-      acc[name] = normalizeProbabilities(MONKEY_TURN_V_SETTINGS_NAMES.reduce((sAcc, s) => { sAcc[s] = 1.0; return sAcc; }, {} as MonkeyTurnVSettingSettingProbabilities));
+      acc[name] = normalizeProbabilities(activeSettings.reduce((sAcc, s) => { sAcc[s] = 1.0; return sAcc; }, {} as MonkeyTurnVSettingSettingProbabilities));
       return acc;
     }, {} as MonkeyTurnVSettingProbabilitiesBreakdown),
     activeElementKeys: [],
@@ -120,22 +125,22 @@ export const calculateMonkeyTurnVSettingProbabilities = (
   elementNames.forEach(elementName => {
     const tempLogLikelihoods: MonkeyTurnVSettingSettingProbabilities = {};
 
-    MONKEY_TURN_V_SETTINGS_NAMES.forEach(setting => {
-      const idealRates = MONKEY_TURN_V_IDEAL_RATES[setting as MonkeyTurnVSetting]; 
-      let logL = 0; 
+    activeSettings.forEach(setting => {
+      const idealRates = MONKEY_TURN_V_IDEAL_RATES[setting as MonkeyTurnVSetting];
+      let logL = 0;
 
       switch (elementName) {
         case "5枚役 確率":
           if (gamesPlayed > 0) {
             logL = getLogLikelihoodForBinomial(coin5Count, gamesPlayed, idealRates.coin5Rate);
-          } else if (coin5Count > 0) { 
-            logL = -Infinity; 
+          } else if (coin5Count > 0) {
+            logL = -Infinity;
           }
           break;
         case "落ち/気配 確率":
           if (totalOchiKehai > 0) {
             logL = getLogLikelihoodForBinomial(ochiCount, totalOchiKehai, idealRates.ochiRate);
-          } else if (ochiCount > 0 || kehaiCount > 0) { 
+          } else if (ochiCount > 0 || kehaiCount > 0) {
             logL = -Infinity;
           }
           break;
@@ -144,13 +149,13 @@ export const calculateMonkeyTurnVSettingProbabilities = (
     });
 
     const maxLogL = Math.max(...Object.values(tempLogLikelihoods).filter(isFinite));
-    
+
     if (isFinite(maxLogL)) {
-        MONKEY_TURN_V_SETTINGS_NAMES.forEach(setting => {
+        activeSettings.forEach(setting => {
             if (isFinite(tempLogLikelihoods[setting])) {
                 breakdownLikelihoods[elementName][setting] = Math.exp(tempLogLikelihoods[setting] - maxLogL);
             } else {
-                 breakdownLikelihoods[elementName][setting] = 0; 
+                 breakdownLikelihoods[elementName][setting] = 0;
             }
             if (breakdownLikelihoods[elementName][setting] < MIN_LIKELIHOOD && activeElementKeys.includes(elementName)) {
                 breakdownLikelihoods[elementName][setting] = MIN_LIKELIHOOD;
@@ -158,8 +163,8 @@ export const calculateMonkeyTurnVSettingProbabilities = (
                  breakdownLikelihoods[elementName][setting] = 1.0; // Default if not active
             }
         });
-    } else { 
-        MONKEY_TURN_V_SETTINGS_NAMES.forEach(setting => {
+    } else {
+        activeSettings.forEach(setting => {
             breakdownLikelihoods[elementName][setting] = (activeElementKeys.includes(elementName) ? 0 : 1.0);
         });
     }
@@ -167,7 +172,7 @@ export const calculateMonkeyTurnVSettingProbabilities = (
   });
 
 
-  MONKEY_TURN_V_SETTINGS_NAMES.forEach(setting => {
+  activeSettings.forEach(setting => {
     let product = 1.0;
     activeElementKeys.forEach(elementName => { // Only multiply by active elements
       product *= (breakdownLikelihoods[elementName][setting] || MIN_LIKELIHOOD);

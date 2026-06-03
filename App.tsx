@@ -88,7 +88,7 @@ const App: React.FC = () => {
     (probs) => setMonkeyTurnSettingProbsRef.current?.(probs as MonkeyTurnVSettingFullResult | null)
   );
   
-  const { monkeyTurnSettingInputs, monkeyTurnSettingProbs, handleMonkeyTurnSettingInputChange, handleCalculateMonkeyTurnSettings, resetMonkeyTurnSettingInputsAndProbs, setMonkeyTurnSettingProbs } = useMonkeyTurnVSetting(
+  const { monkeyTurnSettingInputs, monkeyTurnSettingProbs, selectedSettings: monkeyTurnSelectedSettings, handleMonkeyTurnSettingInputChange, handleToggleSelectedSetting: handleMonkeyTurnToggleSetting, handleCalculateMonkeyTurnSettings, resetMonkeyTurnSettingInputsAndProbs, setMonkeyTurnSettingProbs } = useMonkeyTurnVSetting(
     setInputChangedSinceLastCalc, 
     gameMode, 
     (probs) => setMonkeyTurnScenarioProbsRef.current?.(probs as MonkeyTurnVScenarioProbabilities | null)
@@ -221,6 +221,8 @@ const App: React.FC = () => {
             onMonkeyTurnScenarioInputChange={handleMonkeyTurnScenarioInputChange}
             onMonkeyTurnSettingInputChange={handleMonkeyTurnSettingInputChange}
             onMonkeyTurnRivalModeChange={handleMonkeyTurnRivalModeChange}
+            monkeyTurnSelectedSettings={monkeyTurnSelectedSettings}
+            onMonkeyTurnSelectedSettingsChange={handleMonkeyTurnToggleSetting}
             onCalculateMonkeyTurnSettingsClick={handleCalculateMonkeyTurnSettings}
             onResetMonkeyTurnSettingInputsClick={resetMonkeyTurnSettingInputsAndProbs}
             onResetMonkeyTurnScenarioInputsClick={resetMonkeyTurnScenarioInputsAndProbs}

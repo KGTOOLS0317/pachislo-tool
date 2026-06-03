@@ -4,7 +4,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import type { MonkeyTurnVSettingInput, MonkeyTurnVSettingFullResult, MonkeyTurnVScenarioProbabilities } from '../types';
 import { GameMode } from '../types';
-import { initialMonkeyTurnVSettingInputs } from '../constants/monkeyTurnVConstants';
+import { initialMonkeyTurnVSettingInputs, MONKEY_TURN_V_SETTINGS_NAMES } from '../constants/monkeyTurnVConstants';
 import { calculateMonkeyTurnVSettingProbabilities } from '../services/monkeyTurnVSettingCalculator';
 
 const LOCAL_STORAGE_KEY_MTV_SETTING_INPUTS = 'monkeyTurnV_settingInputs_v1';
@@ -32,6 +32,7 @@ export const useMonkeyTurnVSetting = (
   });
 
   const [monkeyTurnSettingProbs, setMonkeyTurnSettingProbs] = useState<MonkeyTurnVSettingFullResult | null>(null);
+  const [selectedSettings, setSelectedSettings] = useState<string[]>([...MONKEY_TURN_V_SETTINGS_NAMES]);
 
   useEffect(() => {
     if (localStorage.getItem(LOCAL_STORAGE_KEY_GAME_MODE) === GameMode.MONKEY_TURN_V) {
@@ -58,11 +59,23 @@ export const useMonkeyTurnVSetting = (
         return;
     }
 
-    const probs = calculateMonkeyTurnVSettingProbabilities(monkeyTurnSettingInputs);
+    const probs = calculateMonkeyTurnVSettingProbabilities(monkeyTurnSettingInputs, selectedSettings);
     setMonkeyTurnSettingProbs(probs);
     setOtherProbs(null); // Clear scenario probabilities
     setInputChangedSinceLastCalc(false);
-  }, [monkeyTurnSettingInputs, setInputChangedSinceLastCalc, setOtherProbs]);
+  }, [monkeyTurnSettingInputs, selectedSettings, setInputChangedSinceLastCalc, setOtherProbs]);
+
+  const handleToggleSelectedSetting = useCallback((setting: string) => {
+    setSelectedSettings(prev => {
+      if (prev.includes(setting)) {
+        if (prev.length <= 1) return prev; // 最低1つは選択維持
+        return prev.filter(s => s !== setting);
+      } else {
+        return [...prev, setting];
+      }
+    });
+    setInputChangedSinceLastCalc(true);
+  }, [setInputChangedSinceLastCalc]);
 
   const resetMonkeyTurnSettingInputsAndProbs = useCallback(() => {
     setMonkeyTurnSettingInputs(initialMonkeyTurnVSettingInputs);
@@ -88,9 +101,11 @@ export const useMonkeyTurnVSetting = (
   return {
     monkeyTurnSettingInputs,
     monkeyTurnSettingProbs,
+    selectedSettings,
     handleMonkeyTurnSettingInputChange,
+    handleToggleSelectedSetting,
     handleCalculateMonkeyTurnSettings,
     resetMonkeyTurnSettingInputsAndProbs,
-    setMonkeyTurnSettingProbs, // Expose setter for App.tsx to clear
+    setMonkeyTurnSettingProbs,
   };
 };

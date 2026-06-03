@@ -1,5 +1,5 @@
 // components/ReferenceTables.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ScenarioName as MonkeyTurnScenarioName, 
   CharacterName as MonkeyTurnCharacterName, 
@@ -106,27 +106,36 @@ const getCharacterRateCellStyle = (
 };
 
 
-export const ReferenceTables: React.FC<ReferenceTablesProps> = ({ 
-  gameMode, 
-  monkeyTurnScenariosData, 
-  // monkeyTurnScenarioNames prop will receive MTV_SCENARIO_NAMES from App.tsx
-  monkeyTurnScenarioNames = MTV_SCENARIO_NAMES, // Default to the imported constant if not passed explicitly
-  monkeyTurnCharacters 
+export const ReferenceTables: React.FC<ReferenceTablesProps> = ({
+  gameMode,
+  monkeyTurnScenariosData,
+  monkeyTurnScenarioNames = MTV_SCENARIO_NAMES,
+  monkeyTurnCharacters
 }) => {
+  const [showRoundTable, setShowRoundTable] = useState(false);
+
   if (gameMode !== GameMode.MONKEY_TURN_V || !monkeyTurnScenariosData || !monkeyTurnCharacters) {
-    return null; // Don't render for other game modes or if data is missing
+    return null;
   }
 
   const rounds = [1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <div className="mt-6 md:mt-8 space-y-6 md:space-y-8">
-      {/* Table 1: Scenario Continuation Rates per Round */}
+      {/* Table 1: Scenario Continuation Rates per Round (collapsed by default) */}
       <div className="p-3 sm:p-4 bg-sky-50 rounded-xl shadow-lg border border-sky-200">
-        <h2 className="text-base sm:text-lg font-semibold mb-3 text-sky-600 border-b-2 border-sky-600/30 pb-2">
-          シナリオ別 ラウンド毎継続期待度
-        </h2>
-        <div className="overflow-x-auto custom-scroll pb-2">
+        <div className="flex justify-between items-center border-b-2 border-sky-600/30 pb-2 mb-1">
+          <h2 className="text-base sm:text-lg font-semibold text-sky-600">
+            シナリオ別 ラウンド毎継続期待度
+          </h2>
+          <button
+            onClick={() => setShowRoundTable(prev => !prev)}
+            className="text-xs px-2.5 py-1 bg-sky-100 hover:bg-sky-200 text-sky-700 rounded border border-sky-300 focus:outline-none"
+          >
+            {showRoundTable ? '非表示' : '表示する'}
+          </button>
+        </div>
+        {showRoundTable && <div className="overflow-x-auto custom-scroll pb-2">
           <table className="min-w-full w-max text-xs border-collapse">
             <thead>
               <tr className="bg-sky-100">
@@ -161,7 +170,7 @@ export const ReferenceTables: React.FC<ReferenceTablesProps> = ({
               ))}
             </tbody>
           </table>
-        </div>
+        </div>}
       </div>
 
       {/* Table 2: Character Appearance Rates per Scenario */}

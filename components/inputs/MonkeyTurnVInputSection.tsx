@@ -1,13 +1,14 @@
 // components/inputs/MonkeyTurnVInputSection.tsx
 import React, { useState } from 'react';
 import type { MonkeyTurnVSetInput, MonkeyTurnVSettingInput } from '../../types';
-import { 
-  CharacterName as MonkeyTurnCharacterName, 
-  LampColor as MonkeyTurnLampColor, 
+import {
+  CharacterName as MonkeyTurnCharacterName,
+  LampColor as MonkeyTurnLampColor,
   RivalMode as MonkeyTurnRivalMode,
   CHARACTERS as MONKEY_TURN_CHARACTERS,
   LAMP_COLORS as MONKEY_TURN_LAMP_COLORS,
   characterImageMap,
+  MONKEY_TURN_V_SETTINGS_NAMES,
 } from '../../constants/monkeyTurnVConstants';
 import { CompactNumberInput } from '../common/CompactNumberInput';
 // InputCard will be used if layout requires it, but for now, base classes are directly applied.
@@ -19,9 +20,11 @@ interface MonkeyTurnVInputSectionProps {
   onScenarioInputChange: (round: number, field: keyof Omit<MonkeyTurnVSetInput, 'round'>, value: string | null) => void; 
   onSettingInputChange: (field: keyof MonkeyTurnVSettingInput, value: number) => void; 
   onRivalModeChange: (newMode: MonkeyTurnRivalMode) => void;
+  selectedSettings: string[];
+  onSelectedSettingsChange: (setting: string) => void;
   onCalculateSettingsClick: () => void;
-  onResetSettingInputsClick: () => void; 
-  onResetScenarioInputsClick: () => void; 
+  onResetSettingInputsClick: () => void;
+  onResetScenarioInputsClick: () => void;
 }
 
 export const MonkeyTurnVInputSection: React.FC<MonkeyTurnVInputSectionProps> = ({
@@ -31,10 +34,19 @@ export const MonkeyTurnVInputSection: React.FC<MonkeyTurnVInputSectionProps> = (
   onScenarioInputChange,
   onSettingInputChange,
   onRivalModeChange,
+  selectedSettings,
+  onSelectedSettingsChange,
   onCalculateSettingsClick,
   onResetSettingInputsClick,
   onResetScenarioInputsClick,
 }) => {
+  const settingButtonColors: Record<string, { active: string; inactive: string }> = {
+    '設定1': { active: 'bg-slate-400 text-white', inactive: 'bg-slate-100 text-slate-400 border border-slate-300' },
+    '設定2': { active: 'bg-sky-400 text-white',   inactive: 'bg-sky-50 text-sky-300 border border-sky-200' },
+    '設定4': { active: 'bg-green-400 text-white',  inactive: 'bg-green-50 text-green-300 border border-green-200' },
+    '設定5': { active: 'bg-red-400 text-white',    inactive: 'bg-red-50 text-red-300 border border-red-200' },
+    '設定6': { active: 'bg-purple-400 text-white', inactive: 'bg-purple-50 text-purple-300 border border-purple-200' },
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTargetRound, setModalTargetRound] = useState<number | null>(null);
 
@@ -116,7 +128,24 @@ export const MonkeyTurnVInputSection: React.FC<MonkeyTurnVInputSectionProps> = (
             />
           </div>
         </div>
-        <div className="mt-4">
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+          <span className="text-[10px] sm:text-xs font-medium text-gray-500 whitespace-nowrap">設定絞り込み:</span>
+          {MONKEY_TURN_V_SETTINGS_NAMES.map(setting => {
+            const isSelected = selectedSettings.includes(setting);
+            const colors = settingButtonColors[setting] ?? { active: 'bg-gray-400 text-white', inactive: 'bg-gray-100 text-gray-400 border border-gray-300' };
+            return (
+              <button
+                key={setting}
+                onClick={() => onSelectedSettingsChange(setting)}
+                className={`text-xs px-2 py-0.5 rounded font-medium transition-all ${isSelected ? colors.active : colors.inactive}`}
+                title={isSelected ? `${setting}を除外` : `${setting}を対象に追加`}
+              >
+                {setting}
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-3">
           <button
             onClick={onCalculateSettingsClick}
             className="w-full px-6 py-2.5 sm:px-7 sm:py-3 bg-gradient-to-r from-teal-500 to-cyan-600 hover:from-teal-600 hover:to-cyan-700 text-white font-semibold rounded-lg shadow-xl focus:outline-none focus:ring-4 focus:ring-teal-300 focus:ring-opacity-70 transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-95 text-sm sm:text-base"

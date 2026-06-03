@@ -16,9 +16,11 @@ interface ScenarioInputPanelProps {
   onMonkeyTurnScenarioInputChange?: (round: number, field: keyof Omit<MonkeyTurnVSetInput, 'round'>, value: string | null) => void; 
   onMonkeyTurnSettingInputChange?: (field: keyof MonkeyTurnVSettingInput, value: number | null) => void; 
   onMonkeyTurnRivalModeChange?: (newMode: MonkeyTurnRivalMode) => void;
+  monkeyTurnSelectedSettings?: string[];
+  onMonkeyTurnSelectedSettingsChange?: (setting: string) => void;
   onCalculateMonkeyTurnSettingsClick?: () => void;
-  onResetMonkeyTurnSettingInputsClick?: () => void; 
-  onResetMonkeyTurnScenarioInputsClick?: () => void; 
+  onResetMonkeyTurnSettingInputsClick?: () => void;
+  onResetMonkeyTurnScenarioInputsClick?: () => void;
   // King Hana Hana S props
   kingHanaHanaInputs?: KingHanaHanaSInput;
   onKingHanaHanaInputChange?: (field: keyof KingHanaHanaSInput, value: any) => void;
@@ -79,9 +81,11 @@ export const ScenarioInputPanel: React.FC<ScenarioInputPanelProps> = ({
   onStarHanaHanaInputChange,
   onNewGetterMouseInputChange,
   onHappyJugglerInputChange,
+  monkeyTurnSelectedSettings,
+  onMonkeyTurnSelectedSettingsChange,
   onCalculateMonkeyTurnSettingsClick,
-  onResetMonkeyTurnSettingInputsClick, 
-  onResetMonkeyTurnScenarioInputsClick, 
+  onResetMonkeyTurnSettingInputsClick,
+  onResetMonkeyTurnScenarioInputsClick,
 }) => {
 
   return (
@@ -95,8 +99,10 @@ export const ScenarioInputPanel: React.FC<ScenarioInputPanelProps> = ({
           settingInputs={monkeyTurnSettingInputs}
           rivalMode={monkeyTurnRivalMode}
           onScenarioInputChange={onMonkeyTurnScenarioInputChange}
-          onSettingInputChange={onMonkeyTurnSettingInputChange} 
+          onSettingInputChange={onMonkeyTurnSettingInputChange}
           onRivalModeChange={onMonkeyTurnRivalModeChange}
+          selectedSettings={monkeyTurnSelectedSettings ?? []}
+          onSelectedSettingsChange={onMonkeyTurnSelectedSettingsChange ?? (() => {})}
           onCalculateSettingsClick={onCalculateMonkeyTurnSettingsClick}
           onResetSettingInputsClick={onResetMonkeyTurnSettingInputsClick}
           onResetScenarioInputsClick={onResetMonkeyTurnScenarioInputsClick}
