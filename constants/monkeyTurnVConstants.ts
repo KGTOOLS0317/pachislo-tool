@@ -164,6 +164,17 @@ export const LAMP_COLORS: LampColor[] = Object.values(LampColor);
 export const MTV_SCENARIO_NAMES: ScenarioName[] = Object.values(ScenarioName); // Renamed for clarity
 
 
+export const CHARACTER_MIN_GUARANTEED_CONTINUATION: Partial<Record<CharacterName, number>> = {
+  [CharacterName.ARISA]: 0.50,
+  [CharacterName.KAKOTACHI]: 0.50,
+  [CharacterName.AOSHIMA]: 0.50,
+  [CharacterName.KUSHIDA_HAGIWARA_KOBAYASHI]: 0.66,
+  [CharacterName.PLAYER_COLLECTIVE]: 0.66,
+  [CharacterName.HATANO_FAMILY]: 0.66,
+  [CharacterName.GENERATION_82]: 0.80,
+  [CharacterName.SUMI]: 0.80,
+};
+
 export const LAMP_MIN_GUARANTEED_CONTINUATION: Record<LampColor, number> = {
   [LampColor.WHITE]: 0.00, 
   [LampColor.BLUE]: 0.25,

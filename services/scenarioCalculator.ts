@@ -1,14 +1,15 @@
 
 // services/monkeyTurnVCalculator.ts
 import type { MonkeyTurnVSetInput, MonkeyTurnVScenarioProbabilities } from '../types';
-import { 
-  ScenarioName, 
-  RivalMode, 
-  SCENARIOS_DATA, 
-  ScenarioData, 
-  CharacterName, 
+import {
+  ScenarioName,
+  RivalMode,
+  SCENARIOS_DATA,
+  ScenarioData,
+  CharacterName,
   LampColor,
   LAMP_MIN_GUARANTEED_CONTINUATION,
+  CHARACTER_MIN_GUARANTEED_CONTINUATION,
   ROUND08_CONFIRMING_CHARACTER,
   BLUE_BACKGROUND_R8_CHARS
 } from '../constants/monkeyTurnVConstants';
@@ -134,7 +135,18 @@ export const calculateMonkeyTurnVProbabilities = (
       }
       overallLikelihoodFactor *= charLikelihood;
 
-      // 2b. Lamp Color Likelihood
+      // 2b. Character-Based Minimum Continuation Constraint
+      if (setInput.startScreen !== null && overallLikelihoodFactor > 0) {
+        const charMinCont = CHARACTER_MIN_GUARANTEED_CONTINUATION[setInput.startScreen];
+        if (charMinCont !== undefined) {
+          const roundCont = scenarioInfo.lampRoundData[setInput.round];
+          if (roundCont !== undefined && roundCont < charMinCont) {
+            overallLikelihoodFactor = 0;
+          }
+        }
+      }
+
+      // 2d. Lamp Color Likelihood
       let lampLikelihood = 1.0;
       if (setInput.lampColor !== null) {
         const userLampMinContinuation = LAMP_MIN_GUARANTEED_CONTINUATION[setInput.lampColor as LampColor];
