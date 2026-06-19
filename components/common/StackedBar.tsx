@@ -25,13 +25,13 @@ export const SHARED_TEXT_COLORS: Record<string, string> = {
 
 // Inline border colors for image-capture-safe highlight (box-shadow/ring not rendered by html-to-image)
 const HIGHLIGHT_BORDER_COLORS: Record<string, string> = {
-  "設定1": "#1e293b",
-  "設定2": "#075985",
-  "設定3": "#713f12",
-  "設定4": "#14532d",
-  "設定5": "#7f1d1d",
-  "設定6": "#3b0764",
-  "default": "#1f2937",
+  "設定1": "#475569",
+  "設定2": "#0284c7",
+  "設定3": "#ca8a04",
+  "設定4": "#16a34a",
+  "設定5": "#dc2626",
+  "設定6": "#9333ea",
+  "default": "#6b7280",
 };
 
 
