@@ -23,15 +23,15 @@ export const SHARED_TEXT_COLORS: Record<string, string> = {
   "default": "text-gray-800",
 };
 
-// New constant for highlight colors
-const SHARED_SETTING_HIGHLIGHT_COLORS: Record<string, { border: string; ring: string }> = {
-  "設定1": { border: "border-slate-600 dark:border-slate-300", ring: "ring-slate-600 dark:ring-slate-300" },
-  "設定2": { border: "border-sky-600 dark:border-sky-300",     ring: "ring-sky-600 dark:ring-sky-300" },
-  "設定3": { border: "border-yellow-600 dark:border-yellow-300", ring: "ring-yellow-600 dark:ring-yellow-300" },
-  "設定4": { border: "border-green-600 dark:border-green-300", ring: "ring-green-600 dark:ring-green-300" },
-  "設定5": { border: "border-red-600 dark:border-red-300",     ring: "ring-red-600 dark:ring-red-300" },
-  "設定6": { border: "border-purple-600 dark:border-purple-300", ring: "ring-purple-600 dark:ring-purple-300" },
-  "default": { border: "border-gray-500 dark:border-gray-400", ring: "ring-gray-500 dark:ring-gray-400" },
+// Inline border colors for image-capture-safe highlight (box-shadow/ring not rendered by html-to-image)
+const HIGHLIGHT_BORDER_COLORS: Record<string, string> = {
+  "設定1": "#1e293b",
+  "設定2": "#075985",
+  "設定3": "#713f12",
+  "設定4": "#14532d",
+  "設定5": "#7f1d1d",
+  "設定6": "#3b0764",
+  "default": "#1f2937",
 };
 
 
@@ -64,18 +64,13 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
         const bgColor = SHARED_SETTING_COLORS[name] || SHARED_SETTING_COLORS["default"];
         const textColor = SHARED_TEXT_COLORS[name] || SHARED_TEXT_COLORS["default"];
         const isHighest = (probability as number) === maxProbability && (probability as number) > 0.0001;
-
-        let highlightClasses = "";
-        if (isHighest) {
-            const highlightColors = SHARED_SETTING_HIGHLIGHT_COLORS[name] || SHARED_SETTING_HIGHLIGHT_COLORS["default"];
-            const ringThicknessClass = isOverallResult ? "ring-4" : "ring-2";
-            highlightClasses = `${highlightColors.ring} ${ringThicknessClass} ring-inset z-10`;
-        }
+        const borderColor = HIGHLIGHT_BORDER_COLORS[name] || HIGHLIGHT_BORDER_COLORS["default"];
+        const borderWidth = isOverallResult ? '3px' : '2px';
 
         return (
           <div
             key={name}
-            className={`overflow-hidden ${bgColor} transition-all duration-700 ease-out ${highlightClasses}`}
+            className={`overflow-hidden ${bgColor} transition-all duration-700 ease-out`}
             style={{
               width: segmentWidth,
               height: BAR_HEIGHT,
@@ -83,6 +78,7 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
+              position: 'relative',
             }}
             title={`${name}: ${percentage}%`}
             role="progressbar"
@@ -91,10 +87,13 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
             aria-valuemax={100}
             aria-label={`${name} probability: ${percentage}%`}
           >
+            {isHighest && (
+              <div style={{ position: 'absolute', inset: 0, border: `${borderWidth} solid ${borderColor}`, zIndex: 10, pointerEvents: 'none' }} />
+            )}
             {pct >= 6 && (
               <span
                 className={`text-xs font-medium ${textColor} whitespace-nowrap px-1`}
-                style={{ lineHeight: 1, display: 'block' }}
+                style={{ lineHeight: 1, display: 'block', position: 'relative', zIndex: 11 }}
               >
                 {percentage}%
               </span>
