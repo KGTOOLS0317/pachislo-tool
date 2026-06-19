@@ -68,9 +68,8 @@ export const StackedBar: React.FC<{ probabilities: KingHanaHanaSSettingProbabili
         let highlightClasses = "";
         if (isHighest) {
             const highlightColors = SHARED_SETTING_HIGHLIGHT_COLORS[name] || SHARED_SETTING_HIGHLIGHT_COLORS["default"];
-            const effectClasses = isOverallResult ? "transform scale-[1.015] shadow-xl" : "shadow-md";
-            const ringThicknessClass = isOverallResult ? "ring-2" : "ring-1";
-            highlightClasses = `${highlightColors.border} ${highlightColors.ring} ${ringThicknessClass} ring-offset-0 ${effectClasses} z-10`;
+            const ringThicknessClass = isOverallResult ? "ring-4" : "ring-2";
+            highlightClasses = `${highlightColors.ring} ${ringThicknessClass} ring-inset z-10`;
         }
 
         return (
