@@ -48,6 +48,7 @@ import { useDragonHanaHanaSenkou } from './hooks/useDragonHanaHanaSenkou';
 import { useStarHanaHana } from './hooks/useStarHanaHana';
 import { useNewGetterMouse } from './hooks/useNewGetterMouse';
 import { useHappyJuggler } from './hooks/useHappyJuggler';
+import { GodEaterResurrection } from './components/GodEaterResurrection';
 
 // Constants
 import { SCENARIOS_DATA as MTV_SCENARIOS_DATA, CHARACTERS as MTV_CHARACTERS, MTV_SCENARIO_NAMES, MONKEY_TURN_V_SETTINGS_NAMES } from './constants/monkeyTurnVConstants';
@@ -115,7 +116,7 @@ const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY_GAME_MODE, gameMode);
     setInputChangedSinceLastCalc(false); 
-    document.body.classList.remove('page-bg-mtv', 'page-bg-khh', 'page-bg-hhh', 'page-bg-mjv', 'page-bg-imj', 'page-bg-ggj', 'page-bg-fkj', 'page-bg-dhh', 'page-bg-shh', 'page-bg-ngm', 'page-bg-hpj');
+    document.body.classList.remove('page-bg-mtv', 'page-bg-khh', 'page-bg-hhh', 'page-bg-mjv', 'page-bg-imj', 'page-bg-ggj', 'page-bg-fkj', 'page-bg-dhh', 'page-bg-shh', 'page-bg-ngm', 'page-bg-hpj', 'page-bg-ge');
     switch (gameMode) {
       case GameMode.MONKEY_TURN_V: document.body.classList.add('page-bg-mtv'); break;
       case GameMode.KING_HANA_HANA_S: document.body.classList.add('page-bg-khh'); break;
@@ -128,6 +129,7 @@ const App: React.FC = () => {
       case GameMode.STAR_HANA_HANA: document.body.classList.add('page-bg-shh'); break;
       case GameMode.NEW_GETTER_MOUSE: document.body.classList.add('page-bg-ngm'); break;
       case GameMode.HAPPY_JUGGLER: document.body.classList.add('page-bg-hpj'); break;
+      case GameMode.GOODEATER_RESURRECTION: break;
     }
   }, [gameMode]);
 
@@ -213,6 +215,9 @@ const App: React.FC = () => {
     <div className="container mx-auto p-3 sm:p-4 md:p-6 text-gray-800 min-h-screen">
         <Header currentGameMode={gameMode} onGameModeChange={handleGameModeChange} />
         <main className="mt-1 sm:mt-2 space-y-6 md:space-y-8">
+          {gameMode === GameMode.GOODEATER_RESURRECTION ? (
+            <GodEaterResurrection />
+          ) : (<>
           <ScenarioInputPanel
             gameMode={gameMode}
             monkeyTurnScenarioInputs={monkeyTurnScenarioInputs}
@@ -280,6 +285,7 @@ const App: React.FC = () => {
             />
           )}
           <ReferenceTables gameMode={gameMode} monkeyTurnScenariosData={MTV_SCENARIOS_DATA} monkeyTurnScenarioNames={MTV_SCENARIO_NAMES} monkeyTurnCharacters={MTV_CHARACTERS} />
+          </>)}
         </main>
         <footer className="text-center mt-8 sm:mt-10 py-4 sm:py-5 border-t border-gray-300/30">
           <p className="text-xs text-gray-600 mt-1.5 sm:mt-2 leading-relaxed max-w-xl mx-auto px-2">当ツールは入力された情報に基づいて確率を算出するツールです。参考程度に活用してください。</p>

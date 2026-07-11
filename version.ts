@@ -1,9 +1,10 @@
 // version.ts
 import type { VersionInfo } from './types';
 
-export const APP_VERSION = "1.3.10"; 
+export const APP_VERSION = "1.4.0";
 
 export const APP_VERSIONS_HISTORY: VersionInfo[] = [
+  { version: "1.4.0", date: "2026-07-11", changes: ["🐸ゴッドイーター リザレクション カウンターツールを追加（ストーリー終了ボイス・AT終了画面）"] },
   { version: "1.3.10", date: "2026-05-27", changes: ["セキュリティ機能（自前ログイン画面）の差し戻し、プラットフォーム共有制御への最適化"] },
   { version: "1.3.9", date: "2026-05-27", changes: ["Googleアカウントログインによるセキュリティ認証・アクセス制限（ホワイトリスト方式）の試験導入"] },
   { version: "1.3.8", date: "2026-04-09", changes: ["モンキーターンVのシナリオ継続率修正"] },

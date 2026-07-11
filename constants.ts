@@ -11,6 +11,7 @@ export const GAME_MODE_OPTIONS = [
   { value: GameMode.FUNKY_JUGGLER, label: "🤡🐕ファンキージャグラー" },
   { value: GameMode.NEW_GETTER_MOUSE, label: "🐭ニューゲッターマウス" },
   { value: GameMode.MONKEY_TURN_V, label: "🚤モンキーターンV" },
+  { value: GameMode.GOODEATER_RESURRECTION, label: "🐸ゴッドイーター" },
   { value: GameMode.STAR_HANA_HANA, label: "⭐スターハナハナ" },
   { value: GameMode.DRAGON_HANA_HANA_SENKOU, label: "🐉ドラゴンハナハナ閃光" },
   { value: GameMode.KING_HANA_HANA_S, label: "👑キングハナハナS" },
@@ -30,6 +31,7 @@ export const GAME_TITLES: Record<GameMode, string> = {
   [GameMode.STAR_HANA_HANA]: "スターハナハナ 設定判別ツール",
   [GameMode.NEW_GETTER_MOUSE]: "ニューゲッターマウス 設定判別ツール",
   [GameMode.HAPPY_JUGGLER]: "ハッピージャグラー 設定判別ツール",
+  [GameMode.GOODEATER_RESURRECTION]: "ゴッドイーター リザレクション カウンターツール",
 };
 
 // Short titles for display in the header next to the selector
@@ -45,6 +47,7 @@ export const GAME_SHORT_TITLES: Record<GameMode, string> = {
   [GameMode.STAR_HANA_HANA]: "設定判別",
   [GameMode.NEW_GETTER_MOUSE]: "設定判別",
   [GameMode.HAPPY_JUGGLER]: "設定判別",
+  [GameMode.GOODEATER_RESURRECTION]: "カウンター",
 };
 
 // Titles for the results display card
@@ -60,4 +63,5 @@ export const GAME_RESULT_TITLES: Record<GameMode, string> = {
   [GameMode.STAR_HANA_HANA]: "スターハナハナ",
   [GameMode.NEW_GETTER_MOUSE]: "ニューゲッターマウス",
   [GameMode.HAPPY_JUGGLER]: "ハッピージャグラー",
+  [GameMode.GOODEATER_RESURRECTION]: "ゴッドイーター リザレクション",
 };
