@@ -31,7 +31,7 @@ export const GAME_TITLES: Record<GameMode, string> = {
   [GameMode.STAR_HANA_HANA]: "スターハナハナ 設定判別ツール",
   [GameMode.NEW_GETTER_MOUSE]: "ニューゲッターマウス 設定判別ツール",
   [GameMode.HAPPY_JUGGLER]: "ハッピージャグラー 設定判別ツール",
-  [GameMode.GOODEATER_RESURRECTION]: "ゴッドイーター リザレクション カウンターツール",
+  [GameMode.GOODEATER_RESURRECTION]: "ゴッドイーター リザレクション 設定判別項目カウンター",
 };
 
 // Short titles for display in the header next to the selector
@@ -47,7 +47,7 @@ export const GAME_SHORT_TITLES: Record<GameMode, string> = {
   [GameMode.STAR_HANA_HANA]: "設定判別",
   [GameMode.NEW_GETTER_MOUSE]: "設定判別",
   [GameMode.HAPPY_JUGGLER]: "設定判別",
-  [GameMode.GOODEATER_RESURRECTION]: "カウンター",
+  [GameMode.GOODEATER_RESURRECTION]: "設定判別項目カウンター",
 };
 
 // Titles for the results display card
