@@ -33,7 +33,7 @@ const AT_END_SCREENS = [
 const HINT_STYLE: Record<string, string> = {
   'デフォ':       'bg-gray-200 text-gray-600',
   '偶数弱':       'bg-blue-100 text-blue-700',
-  '偶数強':       'bg-blue-600 text-white',
+  '偶数強':       'bg-blue-100 text-blue-700',
   '偶数確':       'bg-blue-600 text-white',
   '高設弱':       'bg-amber-100 text-amber-700',
   '高設強':       'bg-green-200 text-green-800',
