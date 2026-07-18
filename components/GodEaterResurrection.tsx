@@ -3,44 +3,50 @@
 import React, { useState, useCallback } from 'react';
 
 const STORY_END_VOICES = [
-  { id: 'kouta',  character: 'コウタ',   voice: '一緒にバガラリー見ようぜ',                    hint: 'デフォ',  hintLevel: 0 },
-  { id: 'arisa',  character: 'アリサ',   voice: '側面、後方共にクリアです',                    hint: 'デフォ',  hintLevel: 0 },
-  { id: 'hibari', character: 'ヒバリ',   voice: '私にもお役に立てることがあるはずです',         hint: '偶数弱',  hintLevel: 1 },
-  { id: 'soma',   character: 'ソーマ',   voice: '思い出ってのは、悪いことばかりでもないんだな', hint: '高設弱',  hintLevel: 2 },
-  { id: 'yuu',    character: 'ユウ',     voice: '信じられる仲間がいるから、俺たちは戦えるんだ', hint: '2,3否定', hintLevel: 3 },
-  { id: 'sakuya', character: 'サクヤ',   voice: '私は、私のやるべきことをしなくちゃね',         hint: '偶数強',  hintLevel: 4 },
-  { id: 'ren',    character: 'レン',     voice: 'あなたはそのアラガミを殺せますか？',           hint: '高設強',  hintLevel: 5 },
-  { id: 'erina',  character: 'エリナ',   voice: '私、大きくなったらアラガミのいない世界を作る', hint: '偶数確',  hintLevel: 6 },
-  { id: 'rindou', character: 'リンドウ', voice: 'いつでも、お前の背中は預かってやるからな',     hint: '1否定',   hintLevel: 7 },
-  { id: 'shio',   character: 'シオ',     voice: 'いただきま～す',                              hint: '5,6確',   hintLevel: 8 },
+  { id: 'kouta',  character: 'コウタ',   voice: '一緒にバガラリー見ようぜ',                    hint: 'デフォ'    },
+  { id: 'arisa',  character: 'アリサ',   voice: '側面、後方共にクリアです',                    hint: 'デフォ'    },
+  { id: 'hibari', character: 'ヒバリ',   voice: '私にもお役に立てることがあるはずです',         hint: '偶数弱'    },
+  { id: 'soma',   character: 'ソーマ',   voice: '思い出ってのは、悪いことばかりでもないんだな', hint: '高設弱'    },
+  { id: 'yuu',    character: 'ユウ',     voice: '信じられる仲間がいるから、俺たちは戦えるんだ', hint: '2,3否定'   },
+  { id: 'sakuya', character: 'サクヤ',   voice: '私は、私のやるべきことをしなくちゃね',         hint: '偶数強'    },
+  { id: 'ren',    character: 'レン',     voice: 'あなたはそのアラガミを殺せますか？',           hint: '高設強'    },
+  { id: 'erina',  character: 'エリナ',   voice: '私、大きくなったらアラガミのいない世界を作る', hint: '偶数確'    },
+  { id: 'rindou', character: 'リンドウ', voice: 'いつでも、お前の背中は預かってやるからな',     hint: '1否定'     },
+  { id: 'shio',   character: 'シオ',     voice: 'いただきま～す',                              hint: '5,6確'     },
 ] as const;
 
 const AT_END_SCREENS = [
-  { id: 'none',   hint: 'デフォ',   hintLevel: 0, image: './zz_image/at_end_none.jpg' },
-  { id: 'arisa',  hint: '偶数弱',   hintLevel: 1, image: './zz_image/at_end_arisa.jpg' },
-  { id: 'kouta',  hint: '高設弱',   hintLevel: 2, image: './zz_image/at_end_kouta.jpg' },
-  { id: 'yuu',    hint: '2-4否定',  hintLevel: 3, image: './zz_image/at_end_yuu.jpg' },
-  { id: 'sakuya', hint: '偶数強',   hintLevel: 4, image: './zz_image/at_end_sakuya.jpg' },
-  { id: 'soma',   hint: '高設強',   hintLevel: 5, image: './zz_image/at_end_soma.jpg' },
-  { id: 'cafe',   hint: '偶数確',   hintLevel: 6, image: './zz_image/at_end_cafe.jpg' },
-  { id: 'rindo',  hint: '1否定',    hintLevel: 7, image: './zz_image/at_end_rindo.jpg' },
-  { id: 'shio',   hint: '5,6確',    hintLevel: 8, image: './zz_image/at_end_shio.jpg' },
-  { id: 'at56',   hint: '5,6確定',  hintLevel: 9, image: './zz_image/at_end_56.jpg' },
-  { id: 'at6',    hint: '6確定',    hintLevel: 9, image: './zz_image/at_end_6.jpg' },
+  { id: 'none',   hint: 'デフォ',      image: './zz_image/at_end_none.jpg'   },
+  { id: 'arisa',  hint: '偶数弱',      image: './zz_image/at_end_arisa.jpg'  },
+  { id: 'kouta',  hint: '高設弱',      image: './zz_image/at_end_kouta.jpg'  },
+  { id: 'yuu',    hint: '1,5,6確定',   image: './zz_image/at_end_yuu.jpg'    },
+  { id: 'sakuya', hint: '偶数強',      image: './zz_image/at_end_sakuya.jpg' },
+  { id: 'soma',   hint: '高設強',      image: './zz_image/at_end_soma.jpg'   },
+  { id: 'cafe',   hint: '偶数確',      image: './zz_image/at_end_cafe.jpg'   },
+  { id: 'rindo',  hint: '3,4,5,6確定', image: './zz_image/at_end_rindo.jpg'  },
+  { id: 'shio',   hint: '4,5,6確定',   image: './zz_image/at_end_shio.jpg'   },
+  { id: 'at56',   hint: '5,6確定',     image: './zz_image/at_end_56.jpg'     },
+  { id: 'at6',    hint: '6確定',       image: './zz_image/at_end_6.jpg'      },
 ] as const;
 
-const HINT_BG: Record<number, string> = {
-  0: 'bg-gray-200 text-gray-600',
-  1: 'bg-blue-100 text-blue-700',
-  2: 'bg-cyan-100 text-cyan-700',
-  3: 'bg-slate-600 text-white',
-  4: 'bg-indigo-100 text-indigo-700',
-  5: 'bg-orange-100 text-orange-700',
-  6: 'bg-red-100 text-red-700',
-  7: 'bg-purple-100 text-purple-700',
-  8: 'bg-purple-200 text-purple-800',
-  9: 'bg-yellow-300 text-yellow-900',
+// hint文字列 → バッジスタイル（色を一元管理）
+const HINT_STYLE: Record<string, string> = {
+  'デフォ':       'bg-gray-200 text-gray-600',
+  '偶数弱':       'bg-blue-100 text-blue-700',
+  '偶数強':       'bg-blue-600 text-white',
+  '偶数確':       'bg-blue-600 text-white',
+  '高設弱':       'bg-amber-100 text-amber-700',
+  '高設強':       'bg-green-200 text-green-800',
+  '1否定':        'bg-amber-100 text-amber-700',
+  '2,3否定':      'bg-green-200 text-green-800',
+  '1,5,6確定':    'bg-red-100 text-red-600',
+  '3,4,5,6確定':  'bg-green-200 text-green-800',
+  '4,5,6確定':    'bg-red-100 text-red-600',
+  '5,6確':        'bg-red-600 text-white',
+  '5,6確定':      'bg-red-600 text-white',
+  '6確定':        'bg-purple-500 text-white',
 };
+const hintStyle = (hint: string) => HINT_STYLE[hint] ?? 'bg-gray-200 text-gray-600';
 
 type VoiceId = typeof STORY_END_VOICES[number]['id'];
 type AtEndId = typeof AT_END_SCREENS[number]['id'];
@@ -52,13 +58,12 @@ const initVoice = (): VoiceCounts =>
 const initAtEnd = (): AtEndCounts =>
   Object.fromEntries(AT_END_SCREENS.map(s => [s.id, 0])) as AtEndCounts;
 
-const HintBadge: React.FC<{ hint: string; level: number }> = ({ hint, level }) => (
-  <span className={`inline-block text-[10px] font-semibold px-1 py-0.5 rounded leading-tight whitespace-nowrap ${HINT_BG[level] ?? HINT_BG[0]}`}>
+const HintBadge: React.FC<{ hint: string }> = ({ hint }) => (
+  <span className={`inline-block text-[10px] font-semibold px-1 py-0.5 rounded leading-tight whitespace-nowrap ${hintStyle(hint)}`}>
     {hint}
   </span>
 );
 
-// Compact +/- with square buttons
 const Counter: React.FC<{ count: number; onInc: () => void; onDec: () => void }> = ({ count, onInc, onDec }) => (
   <div className="flex items-center justify-center gap-0.5">
     <button
@@ -120,7 +125,6 @@ export const GodEaterResurrection: React.FC = () => {
             <span className="text-xs text-gray-500">計 <span className="font-semibold text-gray-700">{voiceTotal}</span> 回</span>
           </div>
         </div>
-        {/* table-fixed で列幅を固定し割合列のズレを防止 */}
         <table className="w-full table-fixed text-left">
           <colgroup>
             <col style={{ width: '50%' }} />
@@ -139,7 +143,6 @@ export const GodEaterResurrection: React.FC = () => {
           <tbody>
             {STORY_END_VOICES.map(v => (
               <tr key={v.id} className="border-b border-gray-100 last:border-0">
-                {/* 同一行で名前太字＋セリフ、2行まで折り返し */}
                 <td className="py-1 pr-1 align-middle">
                   <div className="text-[11px] leading-snug line-clamp-2">
                     <span className="font-bold">{v.character}</span>
@@ -147,7 +150,7 @@ export const GodEaterResurrection: React.FC = () => {
                   </div>
                 </td>
                 <td className="py-1 align-middle text-center">
-                  <HintBadge hint={v.hint} level={v.hintLevel} />
+                  <HintBadge hint={v.hint} />
                 </td>
                 <td className="py-1 align-middle">
                   <Counter count={voiceCounts[v.id]} onInc={() => incV(v.id)} onDec={() => decV(v.id)} />
@@ -173,8 +176,8 @@ export const GodEaterResurrection: React.FC = () => {
         <table className="w-full table-fixed text-left">
           <colgroup>
             <col style={{ width: '14%' }} />
-            <col style={{ width: '18%' }} />
-            <col style={{ width: '42%' }} />
+            <col style={{ width: '22%' }} />
+            <col style={{ width: '38%' }} />
             <col style={{ width: '26%' }} />
           </colgroup>
           <thead>
@@ -194,7 +197,7 @@ export const GodEaterResurrection: React.FC = () => {
                   </div>
                 </td>
                 <td className="py-1 align-middle text-center">
-                  <HintBadge hint={s.hint} level={s.hintLevel} />
+                  <HintBadge hint={s.hint} />
                 </td>
                 <td className="py-1 align-middle">
                   <Counter count={atEndCounts[s.id]} onInc={() => incA(s.id)} onDec={() => decA(s.id)} />
