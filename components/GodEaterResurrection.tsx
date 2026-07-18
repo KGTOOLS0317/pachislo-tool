@@ -3,211 +3,183 @@
 import React, { useState, useCallback } from 'react';
 
 const STORY_END_VOICES = [
-  { id: 'kouta',  character: 'コウタ',   voice: '一緒にバガラリー見ようぜ',                          hint: 'デフォルト',      hintLevel: 0 },
-  { id: 'arisa',  character: 'アリサ',   voice: '側面、後方共にクリアです',                          hint: 'デフォルト',      hintLevel: 0 },
-  { id: 'hibari', character: 'ヒバリ',   voice: '私にもお役に立てることがあるはずです',               hint: '偶数設定示唆(弱)', hintLevel: 1 },
-  { id: 'soma',   character: 'ソーマ',   voice: '思い出ってのは、悪いことばかりでもないんだな',       hint: '高設定示唆(弱)',   hintLevel: 1 },
-  { id: 'yuu',    character: 'ユウ',     voice: '信じられる仲間がいるから、俺たちは戦えるんだ',       hint: '設定2・3否定',     hintLevel: 2 },
-  { id: 'sakuya', character: 'サクヤ',   voice: '私は、私のやるべきことをしなくちゃね',               hint: '偶数設定示唆(強)', hintLevel: 3 },
-  { id: 'ren',    character: 'レン',     voice: 'あなたはそのアラガミを殺せますか？',                 hint: '高設定示唆(強)',   hintLevel: 3 },
-  { id: 'erina',  character: 'エリナ',   voice: '私、大きくなったらアラガミのいない世界を作る',       hint: '偶数設定濃厚',    hintLevel: 4 },
-  { id: 'rindou', character: 'リンドウ', voice: 'いつでも、お前の背中は預かってやるからな',           hint: '設定2以上濃厚',   hintLevel: 4 },
-  { id: 'shio',   character: 'シオ',     voice: 'いただきま～す',                                    hint: '設定5以上濃厚',   hintLevel: 5 },
+  { id: 'kouta',  character: 'コウタ',   voice: '一緒にバガラリー見ようぜ',                    hint: 'デフォ',   hintLevel: 0 },
+  { id: 'arisa',  character: 'アリサ',   voice: '側面、後方共にクリアです',                    hint: 'デフォ',   hintLevel: 0 },
+  { id: 'hibari', character: 'ヒバリ',   voice: '私にもお役に立てることがあるはずです',         hint: '偶数弱',   hintLevel: 1 },
+  { id: 'soma',   character: 'ソーマ',   voice: '思い出ってのは、悪いことばかりでもないんだな', hint: '高設弱',   hintLevel: 2 },
+  { id: 'yuu',    character: 'ユウ',     voice: '信じられる仲間がいるから、俺たちは戦えるんだ', hint: '2,3否定',  hintLevel: 3 },
+  { id: 'sakuya', character: 'サクヤ',   voice: '私は、私のやるべきことをしなくちゃね',         hint: '偶数強',   hintLevel: 4 },
+  { id: 'ren',    character: 'レン',     voice: 'あなたはそのアラガミを殺せますか？',           hint: '高設強',   hintLevel: 5 },
+  { id: 'erina',  character: 'エリナ',   voice: '私、大きくなったらアラガミのいない世界を作る', hint: '偶数確',   hintLevel: 6 },
+  { id: 'rindou', character: 'リンドウ', voice: 'いつでも、お前の背中は預かってやるからな',     hint: '1否定',    hintLevel: 7 },
+  { id: 'shio',   character: 'シオ',     voice: 'いただきま～す',                              hint: '5,6確',    hintLevel: 8 },
 ] as const;
 
 const AT_END_SCREENS = [
-  { id: 'none',   name: 'キャラなし',   hint: 'デフォルト',      hintLevel: 0, image: './zz_image/at_end_none.jpg' },
-  { id: 'arisa',  name: 'アリサ',       hint: '偶数設定示唆(弱)', hintLevel: 1, image: './zz_image/at_end_arisa.jpg' },
-  { id: 'kouta',  name: 'コウタ',       hint: '高設定示唆(弱)',   hintLevel: 1, image: './zz_image/at_end_kouta.jpg' },
-  { id: 'yuu',    name: 'ユウ',         hint: '設定2・3・4否定',  hintLevel: 2, image: './zz_image/at_end_yuu.jpg' },
-  { id: 'sakuya', name: 'サクヤ',       hint: '偶数設定示唆(強)', hintLevel: 3, image: './zz_image/at_end_sakuya.jpg' },
-  { id: 'soma',   name: 'ソーマ',       hint: '高設定示唆(強)',   hintLevel: 3, image: './zz_image/at_end_soma.jpg' },
-  { id: 'cafe',   name: 'カフェ',       hint: '偶数設定濃厚',    hintLevel: 4, image: './zz_image/at_end_cafe.jpg' },
-  { id: 'rindo',  name: 'リンドウ',     hint: '設定2以上濃厚',   hintLevel: 4, image: './zz_image/at_end_rindo.jpg' },
-  { id: 'shio',   name: 'シオ',         hint: '設定5以上濃厚',   hintLevel: 5, image: './zz_image/at_end_shio.jpg' },
-  { id: 'at56',   name: '設定5・6確定', hint: '設定5・6確定',    hintLevel: 6, image: './zz_image/at_end_56.jpg' },
-  { id: 'at6',    name: '設定6確定',    hint: '設定6確定',       hintLevel: 6, image: './zz_image/at_end_6.jpg' },
+  { id: 'none',   hint: 'デフォ',    hintLevel: 0, image: './zz_image/at_end_none.jpg' },
+  { id: 'arisa',  hint: '偶数弱',    hintLevel: 1, image: './zz_image/at_end_arisa.jpg' },
+  { id: 'kouta',  hint: '高設弱',    hintLevel: 2, image: './zz_image/at_end_kouta.jpg' },
+  { id: 'yuu',    hint: '2-4否定',   hintLevel: 3, image: './zz_image/at_end_yuu.jpg' },
+  { id: 'sakuya', hint: '偶数強',    hintLevel: 4, image: './zz_image/at_end_sakuya.jpg' },
+  { id: 'soma',   hint: '高設強',    hintLevel: 5, image: './zz_image/at_end_soma.jpg' },
+  { id: 'cafe',   hint: '偶数確',    hintLevel: 6, image: './zz_image/at_end_cafe.jpg' },
+  { id: 'rindo',  hint: '1否定',     hintLevel: 7, image: './zz_image/at_end_rindo.jpg' },
+  { id: 'shio',   hint: '5,6確',     hintLevel: 8, image: './zz_image/at_end_shio.jpg' },
+  { id: 'at56',   hint: '5,6確定',   hintLevel: 9, image: './zz_image/at_end_56.jpg' },
+  { id: 'at6',    hint: '6確定',     hintLevel: 9, image: './zz_image/at_end_6.jpg' },
 ] as const;
 
-const HINT_COLORS: Record<number, string> = {
-  0: 'bg-gray-100 text-gray-600',
+// hint badge colors by level
+const HINT_BG: Record<number, string> = {
+  0: 'bg-gray-200 text-gray-600',
   1: 'bg-blue-100 text-blue-700',
-  2: 'bg-slate-700 text-white',
-  3: 'bg-orange-100 text-orange-700',
-  4: 'bg-red-100 text-red-700',
-  5: 'bg-purple-100 text-purple-700',
-  6: 'bg-yellow-300 text-yellow-900',
+  2: 'bg-cyan-100 text-cyan-700',
+  3: 'bg-slate-600 text-white',
+  4: 'bg-indigo-100 text-indigo-700',
+  5: 'bg-orange-100 text-orange-700',
+  6: 'bg-red-100 text-red-700',
+  7: 'bg-purple-100 text-purple-700',
+  8: 'bg-purple-200 text-purple-800',
+  9: 'bg-yellow-300 text-yellow-900',
 };
 
 type VoiceId = typeof STORY_END_VOICES[number]['id'];
 type AtEndId = typeof AT_END_SCREENS[number]['id'];
-
 type VoiceCounts = Record<VoiceId, number>;
 type AtEndCounts = Record<AtEndId, number>;
 
-const initialVoiceCounts = (): VoiceCounts =>
+const initVoice = (): VoiceCounts =>
   Object.fromEntries(STORY_END_VOICES.map(v => [v.id, 0])) as VoiceCounts;
-
-const initialAtEndCounts = (): AtEndCounts =>
+const initAtEnd = (): AtEndCounts =>
   Object.fromEntries(AT_END_SCREENS.map(s => [s.id, 0])) as AtEndCounts;
 
-const CountButtons: React.FC<{
-  count: number;
-  onIncrement: () => void;
-  onDecrement: () => void;
-}> = ({ count, onIncrement, onDecrement }) => (
-  <div className="flex items-center gap-1.5">
+const HintBadge: React.FC<{ hint: string; level: number }> = ({ hint, level }) => (
+  <span className={`inline-block text-[10px] font-semibold px-1 py-0.5 rounded leading-tight whitespace-nowrap ${HINT_BG[level] ?? HINT_BG[0]}`}>
+    {hint}
+  </span>
+);
+
+const PlusMinus: React.FC<{ count: number; onInc: () => void; onDec: () => void }> = ({ count, onInc, onDec }) => (
+  <div className="flex items-center gap-1">
     <button
-      onClick={onDecrement}
+      onClick={onDec}
       disabled={count === 0}
-      className="w-7 h-7 rounded-full bg-slate-200 hover:bg-slate-300 disabled:opacity-30 disabled:cursor-not-allowed font-bold text-slate-700 flex items-center justify-center text-lg leading-none"
-    >
-      −
-    </button>
-    <span className="w-6 text-center text-sm font-semibold tabular-nums">{count}</span>
+      className="w-6 h-6 rounded-full bg-slate-200 hover:bg-slate-300 disabled:opacity-30 disabled:cursor-not-allowed text-slate-700 flex items-center justify-center text-base font-bold leading-none"
+    >−</button>
+    <span className="w-5 text-center text-sm font-semibold tabular-nums">{count}</span>
     <button
-      onClick={onIncrement}
-      className="w-7 h-7 rounded-full bg-sky-500 hover:bg-sky-600 text-white font-bold flex items-center justify-center text-lg leading-none"
-    >
-      +
-    </button>
+      onClick={onInc}
+      className="w-6 h-6 rounded-full bg-sky-500 hover:bg-sky-600 text-white flex items-center justify-center text-base font-bold leading-none"
+    >+</button>
   </div>
 );
 
-const ImageCell: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
-  const [imgError, setImgError] = useState(false);
-  return imgError ? (
-    <div className="w-14 h-9 rounded bg-gray-200 flex items-center justify-center text-gray-400 text-xs">画像</div>
+const SqImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => {
+  const [err, setErr] = useState(false);
+  return err ? (
+    <div className="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-400 text-[9px]">NO IMG</div>
   ) : (
-    <img src={src} alt={alt} className="w-14 h-9 object-cover rounded" onError={() => setImgError(true)} />
+    <img src={src} alt={alt} className="w-10 h-10 object-cover rounded" onError={() => setErr(true)} />
   );
 };
 
+const pct = (n: number, total: number) => total > 0 ? `${((n / total) * 100).toFixed(1)}%` : '-';
+
 export const GodEaterResurrection: React.FC = () => {
-  const [voiceCounts, setVoiceCounts] = useState<VoiceCounts>(initialVoiceCounts);
-  const [atEndCounts, setAtEndCounts] = useState<AtEndCounts>(initialAtEndCounts);
+  const [voiceCounts, setVoiceCounts] = useState<VoiceCounts>(initVoice);
+  const [atEndCounts, setAtEndCounts] = useState<AtEndCounts>(initAtEnd);
 
   const voiceTotal = Object.values(voiceCounts).reduce((a, b) => a + b, 0);
   const atEndTotal = Object.values(atEndCounts).reduce((a, b) => a + b, 0);
 
-  const incrementVoice = useCallback((id: VoiceId) => {
-    setVoiceCounts(prev => ({ ...prev, [id]: prev[id] + 1 }));
-  }, []);
-
-  const decrementVoice = useCallback((id: VoiceId) => {
-    setVoiceCounts(prev => ({ ...prev, [id]: Math.max(0, prev[id] - 1) }));
-  }, []);
-
-  const incrementAtEnd = useCallback((id: AtEndId) => {
-    setAtEndCounts(prev => ({ ...prev, [id]: prev[id] + 1 }));
-  }, []);
-
-  const decrementAtEnd = useCallback((id: AtEndId) => {
-    setAtEndCounts(prev => ({ ...prev, [id]: Math.max(0, prev[id] - 1) }));
-  }, []);
-
-  const resetAll = useCallback(() => {
-    setVoiceCounts(initialVoiceCounts());
-    setAtEndCounts(initialAtEndCounts());
-  }, []);
-
-  const pct = (count: number, total: number) =>
-    total > 0 ? `${((count / total) * 100).toFixed(1)}%` : '-';
+  const incV = useCallback((id: VoiceId) => setVoiceCounts(p => ({ ...p, [id]: p[id] + 1 })), []);
+  const decV = useCallback((id: VoiceId) => setVoiceCounts(p => ({ ...p, [id]: Math.max(0, p[id] - 1) })), []);
+  const incA = useCallback((id: AtEndId) => setAtEndCounts(p => ({ ...p, [id]: p[id] + 1 })), []);
+  const decA = useCallback((id: AtEndId) => setAtEndCounts(p => ({ ...p, [id]: Math.max(0, p[id] - 1) })), []);
+  const resetAll = useCallback(() => { setVoiceCounts(initVoice()); setAtEndCounts(initAtEnd()); }, []);
 
   return (
     <div className="space-y-5">
       {/* ストーリー終了ボイス */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-base font-bold text-gray-800">ストーリー終了ボイス</h2>
-          <span className="text-xs text-gray-500">合計: <span className="font-semibold text-gray-700">{voiceTotal}</span> 回</span>
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-3">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="text-sm font-bold text-gray-800">ストーリー終了ボイス</h2>
+          <span className="text-xs text-gray-500">計 <span className="font-semibold text-gray-700">{voiceTotal}</span> 回</span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-gray-300">
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">キャラ / ボイス</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">示唆</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">回数</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500 text-right">割合</th>
+        <table className="w-full table-fixed text-left">
+          <colgroup>
+            <col style={{ width: '50%' }} />
+            <col style={{ width: '10%' }} />
+            <col style={{ width: '24%' }} />
+            <col style={{ width: '16%' }} />
+          </colgroup>
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="pb-1 text-[10px] font-semibold text-gray-400">キャラ / ボイス</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400">示唆</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400">回数</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400 text-right">割合</th>
+            </tr>
+          </thead>
+          <tbody>
+            {STORY_END_VOICES.map(v => (
+              <tr key={v.id} className="border-b border-gray-100 last:border-0">
+                <td className="py-1 pr-1">
+                  <div className="text-xs font-semibold text-gray-800 leading-tight">{v.character}</div>
+                  <div className="text-[10px] text-gray-500 leading-tight line-clamp-2">「{v.voice}」</div>
+                </td>
+                <td className="py-1 pr-1">
+                  <HintBadge hint={v.hint} level={v.hintLevel} />
+                </td>
+                <td className="py-1">
+                  <PlusMinus count={voiceCounts[v.id]} onInc={() => incV(v.id)} onDec={() => decV(v.id)} />
+                </td>
+                <td className="py-1 text-xs tabular-nums text-gray-700 text-right pr-1">
+                  {pct(voiceCounts[v.id], voiceTotal)}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {STORY_END_VOICES.map(v => (
-                <tr key={v.id} className="border-b border-gray-200 last:border-0">
-                  <td className="py-1.5 px-2">
-                    <div className="text-sm font-semibold text-gray-800">{v.character}</div>
-                    <div className="text-xs text-gray-500 leading-tight">「{v.voice}」</div>
-                  </td>
-                  <td className="py-1.5 px-2">
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap ${HINT_COLORS[v.hintLevel]}`}>
-                      {v.hint}
-                    </span>
-                  </td>
-                  <td className="py-1.5 px-2">
-                    <CountButtons
-                      count={voiceCounts[v.id]}
-                      onIncrement={() => incrementVoice(v.id)}
-                      onDecrement={() => decrementVoice(v.id)}
-                    />
-                  </td>
-                  <td className="py-1.5 px-2 text-sm tabular-nums text-gray-700 text-right">
-                    {pct(voiceCounts[v.id], voiceTotal)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* AT終了画面 */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-4">
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-md p-3">
         <div className="flex items-center justify-between mb-1">
-          <h2 className="text-base font-bold text-gray-800">AT終了画面</h2>
-          <span className="text-xs text-gray-500">合計: <span className="font-semibold text-gray-700">{atEndTotal}</span> 回</span>
+          <h2 className="text-sm font-bold text-gray-800">AT終了画面</h2>
+          <span className="text-xs text-gray-500">計 <span className="font-semibold text-gray-700">{atEndTotal}</span> 回</span>
         </div>
-        <p className="text-xs text-amber-700 bg-amber-50 rounded px-2 py-1 mb-3">
+        <p className="text-[10px] text-amber-700 bg-amber-50 rounded px-2 py-1 mb-2">
           背景が赤以上のAT終了画面 → <span className="font-semibold">設定3以上濃厚</span>
         </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-gray-300">
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">画像</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">終了画面</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">示唆</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500">回数</th>
-                <th className="pb-1 px-2 text-xs font-semibold text-gray-500 text-right">割合</th>
+        <table className="w-full text-left">
+          <thead>
+            <tr className="border-b border-gray-200">
+              <th className="pb-1 text-[10px] font-semibold text-gray-400 w-12">画像</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400">示唆</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400">回数</th>
+              <th className="pb-1 text-[10px] font-semibold text-gray-400 text-right">割合</th>
+            </tr>
+          </thead>
+          <tbody>
+            {AT_END_SCREENS.map(s => (
+              <tr key={s.id} className="border-b border-gray-100 last:border-0">
+                <td className="py-1 pr-2">
+                  <SqImage src={s.image} alt={s.hint} />
+                </td>
+                <td className="py-1 pr-1">
+                  <HintBadge hint={s.hint} level={s.hintLevel} />
+                </td>
+                <td className="py-1">
+                  <PlusMinus count={atEndCounts[s.id]} onInc={() => incA(s.id)} onDec={() => decA(s.id)} />
+                </td>
+                <td className="py-1 text-xs tabular-nums text-gray-700 text-right pr-1">
+                  {pct(atEndCounts[s.id], atEndTotal)}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {AT_END_SCREENS.map(s => (
-                <tr key={s.id} className="border-b border-gray-200 last:border-0">
-                  <td className="py-1 px-2 w-16">
-                    <ImageCell src={s.image} alt={s.name} />
-                  </td>
-                  <td className="py-1.5 px-2 text-sm font-medium text-gray-800 whitespace-nowrap">{s.name}</td>
-                  <td className="py-1.5 px-2">
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-medium whitespace-nowrap ${HINT_COLORS[s.hintLevel]}`}>
-                      {s.hint}
-                    </span>
-                  </td>
-                  <td className="py-1.5 px-2">
-                    <CountButtons
-                      count={atEndCounts[s.id]}
-                      onIncrement={() => incrementAtEnd(s.id)}
-                      onDecrement={() => decrementAtEnd(s.id)}
-                    />
-                  </td>
-                  <td className="py-1.5 px-2 text-sm tabular-nums text-gray-700 text-right">
-                    {pct(atEndCounts[s.id], atEndTotal)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* リセットボタン */}

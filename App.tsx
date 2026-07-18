@@ -129,7 +129,7 @@ const App: React.FC = () => {
       case GameMode.STAR_HANA_HANA: document.body.classList.add('page-bg-shh'); break;
       case GameMode.NEW_GETTER_MOUSE: document.body.classList.add('page-bg-ngm'); break;
       case GameMode.HAPPY_JUGGLER: document.body.classList.add('page-bg-hpj'); break;
-      case GameMode.GOODEATER_RESURRECTION: break;
+      case GameMode.GOODEATER_RESURRECTION: document.body.classList.add('page-bg-ge'); break;
     }
   }, [gameMode]);
 
