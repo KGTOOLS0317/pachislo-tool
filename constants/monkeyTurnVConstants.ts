@@ -222,7 +222,20 @@ export const initialMonkeyTurnVSettingInputs: MonkeyTurnVSettingInput = {
   coin5Count: 0,
   ochiCount: 0,
   kehaiCount: 0,
+  count222: 0,
+  count444: 0,
+  count666: 0,
+  countOther: 0,
 };
+
+// Display order + colors for the 222/444/666/他 number-hint ratio chart.
+// Colors follow the app's categorical bar palette (slots 1/2/3/4), distinct from SHARED_SETTING_COLORS.
+export const MONKEY_TURN_V_NUMBER_HINT_ITEMS: { key: 'count222' | 'count444' | 'count666' | 'countOther'; label: string; colorClass: string }[] = [
+  { key: 'count222', label: '222', colorClass: 'bg-sky-500' },
+  { key: 'count444', label: '444', colorClass: 'bg-orange-500' },
+  { key: 'count666', label: '666', colorClass: 'bg-teal-500' },
+  { key: 'countOther', label: '他', colorClass: 'bg-amber-500' },
+];
 
 export const MONKEY_TURN_V_IDEAL_RATES: Record<MonkeyTurnVSetting, { coin5Rate: number; ochiRate: number }> = {
   [MonkeyTurnVSetting.SETTING_1]: { coin5Rate: 1 / 38.10, ochiRate: 0.50 }, 

@@ -9,6 +9,7 @@ import {
   LAMP_COLORS as MONKEY_TURN_LAMP_COLORS,
   characterImageMap,
   MONKEY_TURN_V_SETTINGS_NAMES,
+  MONKEY_TURN_V_NUMBER_HINT_ITEMS,
 } from '../../constants/monkeyTurnVConstants';
 import { CompactNumberInput } from '../common/CompactNumberInput';
 // InputCard will be used if layout requires it, but for now, base classes are directly applied.
@@ -123,9 +124,23 @@ export const MonkeyTurnVInputSection: React.FC<MonkeyTurnVInputSectionProps> = (
               value={settingInputs.kehaiCount}
               onChange={(val) => onSettingInputChange('kehaiCount', val)}
               placeholder="0"
-              inputClassName="w-8 sm:w-10" 
+              inputClassName="w-8 sm:w-10"
               labelClassName={commonLabelClassSmall}
             />
+          </div>
+          <div className="flex flex-wrap items-center justify-start gap-x-2 gap-y-2 mt-2">
+            {MONKEY_TURN_V_NUMBER_HINT_ITEMS.map(item => (
+              <CompactNumberInput
+                key={item.key}
+                id={`mtv${item.key}`}
+                visualLabel={item.label}
+                value={settingInputs[item.key]}
+                onChange={(val) => onSettingInputChange(item.key, val)}
+                placeholder="0"
+                inputClassName="w-8 sm:w-10"
+                labelClassName={commonLabelClassSmall}
+              />
+            ))}
           </div>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">

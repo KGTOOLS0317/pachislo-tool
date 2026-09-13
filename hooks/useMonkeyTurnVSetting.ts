@@ -46,11 +46,13 @@ export const useMonkeyTurnVSetting = (
   }, [setInputChangedSinceLastCalc]);
 
   const handleCalculateMonkeyTurnSettings = useCallback(() => {
-    if (monkeyTurnSettingInputs.gamesPlayed <= 0 && monkeyTurnSettingInputs.coin5Count <= 0 && monkeyTurnSettingInputs.ochiCount <=0 && monkeyTurnSettingInputs.kehaiCount <=0) {
-        alert("設定推測のための条件（ゲーム数、5枚役、落ち、気配のいずれか）を1つ以上入力してください。");
+    if (monkeyTurnSettingInputs.gamesPlayed <= 0 && monkeyTurnSettingInputs.coin5Count <= 0 && monkeyTurnSettingInputs.ochiCount <=0 && monkeyTurnSettingInputs.kehaiCount <=0
+        && monkeyTurnSettingInputs.count222 <= 0 && monkeyTurnSettingInputs.count444 <= 0 && monkeyTurnSettingInputs.count666 <= 0 && monkeyTurnSettingInputs.countOther <= 0) {
+        alert("設定推測のための条件（ゲーム数、5枚役、落ち、気配、222/444/666/他のいずれか）を1つ以上入力してください。");
         return;
     }
-    if (monkeyTurnSettingInputs.ochiCount < 0 || monkeyTurnSettingInputs.kehaiCount < 0 || monkeyTurnSettingInputs.coin5Count < 0 || monkeyTurnSettingInputs.gamesPlayed < 0) {
+    if (monkeyTurnSettingInputs.ochiCount < 0 || monkeyTurnSettingInputs.kehaiCount < 0 || monkeyTurnSettingInputs.coin5Count < 0 || monkeyTurnSettingInputs.gamesPlayed < 0
+        || monkeyTurnSettingInputs.count222 < 0 || monkeyTurnSettingInputs.count444 < 0 || monkeyTurnSettingInputs.count666 < 0 || monkeyTurnSettingInputs.countOther < 0) {
       alert("入力値は0以上である必要があります。");
       return;
     }

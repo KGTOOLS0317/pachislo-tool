@@ -28,6 +28,7 @@ import { DRAGON_HANA_HANA_SENKOU_MACHINE_PAYOUT_RATES, DragonHanaHanaSenkouSetti
 import { STAR_HANA_HANA_MACHINE_PAYOUT_RATES, StarHanaHanaSetting, GAMES_PER_BIG_BONUS_STAR_HANA } from '../../constants/starHanaHanaConstants';
 import { NewGetterMouseSetting, NEW_GETTER_MOUSE_MACHINE_PAYOUT_RATES, GAMES_PER_BIG_BONUS_GETTER_MOUSE } from '../../constants/newGetterMouseConstants';
 import { HAPPY_JUGGLER_MACHINE_PAYOUT_RATES } from '../../constants/happyJugglerConstants';
+import { MONKEY_TURN_V_NUMBER_HINT_ITEMS } from '../../constants/monkeyTurnVConstants';
 
 
 interface SettingResultsDisplayProps {
@@ -370,14 +371,22 @@ export const SettingResultsDisplay: React.FC<SettingResultsDisplayProps> = ({
              parts.push(`${netMedalsDisplay.label}: ${netMedalsDisplay.valueText}`);
         }
     } else if (isMonkeyTurnVSetting && monkeyTurnSettingInputs) {
-        const { gamesPlayed, coin5Count, ochiCount, kehaiCount } = monkeyTurnSettingInputs;
-        if (gamesPlayed > 0 || coin5Count > 0 || ochiCount > 0 || kehaiCount > 0) {
-            parts.push(`G: ${gamesPlayed}`);
-            parts.push(`5枚: ${coin5Count}`);
-            parts.push(`落: ${ochiCount}`);
-            parts.push(`気: ${kehaiCount}`);
+        const { gamesPlayed, coin5Count, ochiCount, kehaiCount, count222, count444, count666, countOther } = monkeyTurnSettingInputs;
+        if (gamesPlayed > 0 || coin5Count > 0 || ochiCount > 0 || kehaiCount > 0 || count222 > 0 || count444 > 0 || count666 > 0 || countOther > 0) {
+            if (gamesPlayed > 0 || coin5Count > 0 || ochiCount > 0 || kehaiCount > 0) {
+                parts.push(`G: ${gamesPlayed}`);
+                parts.push(`5枚: ${coin5Count}`);
+                parts.push(`落: ${ochiCount}`);
+                parts.push(`気: ${kehaiCount}`);
+            }
+            if (count222 > 0 || count444 > 0 || count666 > 0 || countOther > 0) {
+                parts.push(`222: ${count222}`);
+                parts.push(`444: ${count444}`);
+                parts.push(`666: ${count666}`);
+                parts.push(`他: ${countOther}`);
+            }
         } else {
-             return ""; 
+             return "";
         }
     } else {
         return ""; 
@@ -389,6 +398,16 @@ export const SettingResultsDisplay: React.FC<SettingResultsDisplayProps> = ({
     return <>{summaryString}{netMedalsDisplay.deviationText}</>;
   }, [jugglerInputs, happyJugglerInputs, kingHanaHanaInputs, hanaHanaHououInputs, dragonHanaHanaSenkouInputs, starHanaHanaInputs, newGetterMouseInputs, monkeyTurnSettingInputs, isKingHanaHanaS, isHanaHanaHouou, isJugglerSeries, isHappyJuggler, isImJuggler, isFunkyJuggler, isDragonHanaHanaSenkou, isStarHanaHana, isNewGetterMouse, isMonkeyTurnVSetting, isStartDataEffectivelyOnly, netMedalsDisplay]);
 
+
+  const monkeyTurnNumberHintData = useMemo(() => {
+    if (!isMonkeyTurnVSetting || !monkeyTurnSettingInputs) return null;
+    const total = MONKEY_TURN_V_NUMBER_HINT_ITEMS.reduce((sum, item) => sum + (monkeyTurnSettingInputs[item.key] || 0), 0);
+    if (total <= 0) return null;
+    return MONKEY_TURN_V_NUMBER_HINT_ITEMS.map(item => {
+      const count = monkeyTurnSettingInputs[item.key] || 0;
+      return { ...item, count, pct: (count / total) * 100 };
+    });
+  }, [isMonkeyTurnVSetting, monkeyTurnSettingInputs]);
 
   const getBreakdownInputSuffix = (elementName: string): string => {
     const currentGenericInputs = kingHanaHanaInputs || hanaHanaHououInputs || jugglerInputs || dragonHanaHanaSenkouInputs || starHanaHanaInputs || newGetterMouseInputs || happyJugglerInputs;
@@ -672,6 +691,49 @@ export const SettingResultsDisplay: React.FC<SettingResultsDisplayProps> = ({
       
       {startDataElementActive && renderBreakdownElement(startDataElementName, "start-data")}
       {sortedActiveElementKeys.map((elementName) => renderBreakdownElement(elementName))}
+
+      {monkeyTurnNumberHintData && (
+        <div className="pt-0.5">
+          <h4 className="text-xs sm:text-sm font-medium mb-0.5 text-slate-600">
+            222/444/666/他 割合
+          </h4>
+          <div
+            className="w-full h-6 sm:h-7 flex rounded shadow mb-1 overflow-hidden"
+            data-bar-container="true"
+          >
+            {monkeyTurnNumberHintData.map(item => {
+              const widthPct = Math.max(0.1, item.pct);
+              return (
+                <div
+                  key={item.key}
+                  className={`${item.colorClass} flex items-center justify-center overflow-hidden`}
+                  style={{ width: `${widthPct}%` }}
+                  title={`${item.label}: ${item.pct.toFixed(1)}% (${item.count})`}
+                  role="progressbar"
+                  aria-valuenow={parseFloat(item.pct.toFixed(1))}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={`${item.label} ${item.pct.toFixed(1)}%`}
+                >
+                  {item.pct >= 6 && (
+                    <span className="text-xs font-medium text-white whitespace-nowrap px-1">
+                      {item.pct.toFixed(1)}%
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+            {monkeyTurnNumberHintData.map(item => (
+              <div key={item.key} className="flex items-center">
+                <span className={`w-3 h-3 rounded-sm mr-1 ${item.colorClass}`}></span>
+                <span className="text-gray-700">{item.label}: {item.count} ({item.pct.toFixed(1)}%)</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="mt-4 pt-3 border-t border-sky-300/70">
         <h4 className="text-xs sm:text-sm font-semibold text-slate-600 mb-1.5">凡例</h4>

@@ -50,6 +50,10 @@ export interface MonkeyTurnVSettingInput {
   coin5Count: number;
   ochiCount: number;
   kehaiCount: number;
+  count222: number;
+  count444: number;
+  count666: number;
+  countOther: number;
 }
 
 export interface MonkeyTurnVSettingSettingProbabilities {
