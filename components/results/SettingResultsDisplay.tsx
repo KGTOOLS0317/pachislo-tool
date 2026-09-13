@@ -724,12 +724,12 @@ export const SettingResultsDisplay: React.FC<SettingResultsDisplayProps> = ({
               );
             })}
           </div>
-          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
             {monkeyTurnNumberHintData.map(item => (
-              <div key={item.key} className="flex items-center">
+              <span key={item.key} className="flex items-center whitespace-nowrap">
                 <span className={`w-3 h-3 rounded-sm mr-1 ${item.colorClass}`}></span>
-                <span className="text-gray-700">{item.label}: {item.count} ({item.pct.toFixed(1)}%)</span>
-              </div>
+                <span className="text-gray-700">{item.label}:{item.count}</span>
+              </span>
             ))}
           </div>
         </div>
